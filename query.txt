@@ -1,51 +1,42 @@
 use db_university;
 
-SELECT *
-FROM students
-WHERE date_of_birth LIKE "1990%";
+select *
+from degrees;
 
-SELECT *
-FROM courses
-WHERE cfu > 10;
+select *
+from students as s
+join degrees as d on s.degree_id = d.id
+where d.name like "Corso di Laurea in Economia";
 
-SELECT *
-FROM students
-WHERE date_of_birth < "1996-01-01"
-ORDER BY date_of_birth DESC;
+select *
+from degrees as deg
+join departments as dep on deg.department_id = dep.id
+where deg.level like "magistrale" and dep.name like "Dipartimento di Neuroscienze";
 
-SELECT *
-FROM courses
-WHERE period = "I semestre"
-AND year = 1;
+select t.id, t.name, t.surname, c.*
+from teachers as t
+join course_teacher as ct on t.id = ct.teacher_id
+join courses as c on ct.course_id = c.id
+where t.id = 44;
 
-SELECT *
-FROM exams
-WHERE hour > "14:00:00"
-AND date = "2020-06-20";
+select *
+from students as s
+join degrees as d on s.degree_id = d.id
+join departments as dep on d.department_id = dep.id
+order by s.surname, s.name desc;
 
-SELECT *
-FROM degrees
-WHERE level = "magistrale";
+select *
+from degrees as deg
+join courses as c on deg.id = c.degree_id
+join course_teacher as ct on c.id = ct.course_id
+join teachers as t on ct.teacher_id = t.id
+order by deg.id, c.id;
 
-SELECT COUNT(*)
-FROM departments;
-
-SELECT COUNT(*)
-FROM teachers
-WHERE phone IS NULL;
-
-SELECT COUNT(*), YEAR(enrolment_date)
-FROM students
-GROUP BY YEAR(enrolment_date);
-
-SELECT COUNT(*), office_address
-FROM teachers
-GROUP BY office_address;
-
-SELECT AVG(vote), exam_id
-FROM exam_student
-GROUP BY exam_id;
-
-SELECT COUNT(*), department_id
-FROM degrees
-GROUP BY department_id;
+select t.name
+from teachers as t
+join course_teacher as ct on t.id = ct.teacher_id
+join courses as c on ct.course_id = c.id
+join degrees as deg on c.degree_id = deg.id
+join departments as dep on deg.department_id = dep.id
+where dep.name like "Dipartimento di Matematica"
+group by t.id
